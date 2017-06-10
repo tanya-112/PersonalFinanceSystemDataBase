@@ -1,0 +1,63 @@
+create database Finance_system;
+go
+
+use Finance_system;
+go
+
+create table Аккаунты
+(КодАккаунта int identity (1,1) primary key,
+Имя nvarchar(15) not null,
+Пароль nvarchar (15) not null,
+ВесьКапитал money default 0);
+go
+
+create table Счета
+(КодСчета int identity (1,1) primary key,
+Название nvarchar(30) not null,
+Валюта nvarchar(10) not null,
+Сумма money default 0,
+Комментарий nvarchar (80),
+КодАккаунта int not null references Аккаунты (КодАккаунта))
+go
+
+create table Категории
+(КодКатегории int identity (1,1) primary key,
+НазваниеКатегории nvarchar(30) not null,
+ДоходИлиРасход nvarchar(6) not null
+       check (ДоходИлиРасход in('Доход','Расход')));
+go
+
+create table Подкатегории
+(КодПодкатегории int identity (1,1) primary key,
+НазваниеПодкатегории nvarchar(30) not null,
+КодКатегории int not null references Категории(КодКатегории));
+go
+
+create table Доходы
+(КодДохода int identity (1,1) primary key,
+Сумма money default 0,
+Дата date not null,
+Комментарий nvarchar(80),
+КодСчета int not null references Счета (КодСчета),
+КодПодкатегории int not null references Подкатегории(КодПодкатегории));
+go
+
+create table Расходы
+(КодРасхода int identity (1,1) primary key,
+Сумма money default 0,
+Дата date not null,
+Комментарий nvarchar(80),
+КодСчета int not null references Счета(КодСчета),
+КодПодкатегории int not null references Подкатегории(КодПодкатегории));
+go
+
+create table Цели
+(КодЦели int identity (1,1) primary key,
+НазваниеЦели nvarchar(30) not null,
+СуммаНакопления money not null,
+НачальныйКапитал money,
+ДатаНачала date not null,
+ДатаОкончания date,
+Комментарий nvarchar(80));
+go
+
